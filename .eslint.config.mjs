@@ -2,9 +2,11 @@
 import js from "@eslint/js";
 import next from "eslint-config-next";
 
-export default [
+// ✅ Paneme configu muutujasse, siis teeme default export'i.
+// See vaigistab "import/no-anonymous-default-export" hoiatuse.
+const config = [
   js.configs.recommended,
-  ...next(), // Next.js + React parimad praktikad
+  ...next(),
   {
     files: ["**/*.{ts,tsx,js,jsx}"],
     languageOptions: {
@@ -17,3 +19,5 @@ export default [
     },
   },
 ];
+
+export default config;
