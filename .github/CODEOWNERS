@@ -1,0 +1,8 @@
+# Vaikimisi omanik (kõik failid) – pane enda GitHub kasutajanimi
+* @frediraba
+
+# Näide: CI/workflows peab üle vaatama sina (või tiim)
+.github/workflows/* @frediraba
+
+# Näide: UI komponendid – lisa hiljem teine omanik vajadusel
+components/** @frediraba
