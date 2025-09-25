@@ -1,0 +1,4 @@
+{
+  "Home": { "title": "Welcome", "cta": "Start here" },
+  "Nav": { "home": "Home", "dashboard": "Dashboard" }
+}

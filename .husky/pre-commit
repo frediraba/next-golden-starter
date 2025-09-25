@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+# format + lint staged failidel
+npx --no-install lint-staged
+
+# kiire TypeScripti tüüpkontroll
+npm run -s typecheck
