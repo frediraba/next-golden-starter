@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "dev", "type": "npm", "script": "dev", "problemMatcher": [] },
+    { "label": "build", "type": "npm", "script": "build", "problemMatcher": [] },
+    { "label": "lint", "type": "npm", "script": "lint", "problemMatcher": "$eslint-stylish" },
+    { "label": "test:unit", "type": "npm", "script": "test:unit", "problemMatcher": [] },
+    { "label": "test:coverage", "type": "npm", "script": "test:coverage", "problemMatcher": [] },
+    { "label": "test:e2e", "type": "npm", "script": "test:e2e", "problemMatcher": [] }
+  ]
+}

@@ -1,43 +1,36 @@
+import type { ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/i18n';
 
 export const dynamic = 'force-dynamic';
-
 export async function generateStaticParams() {
-  return locales.map((l) => ({ locale: l }));
+  return locales.map((locale) => ({ locale }));
 }
-
-async function getMessages(locale: Locale) {
+const LOCALES_SET = new Set(locales as readonly string[]);
+function isLocale(value: string): value is Locale {
+  return LOCALES_SET.has(value);
+}
+async function getMessagesSafe(locale: Locale) {
   try {
-    return (await import(`@/messages/${locale}.json`)).default;
+    const mod = await import(`@/messages/${locale}.json`);
+    return mod.default;
   } catch {
     return null;
   }
 }
-
-/**
- * NB: Next.js validator eeldab, et params.locale on string.
- * Võtame stringi, kontrollime runtime'is, et see on meie toetatud Locale.
- */
 export default async function LocaleLayout({
   children,
   params,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale: raw } = await params; // raw string Nextilt
-
-  // Runtime check — lubame ainult toetatud lokaale
-  if (!(locales as readonly string[]).includes(raw)) {
-    notFound();
-  }
+  const { locale: raw } = await params;
+  if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
-
-  const messages = await getMessages(locale);
+  const messages = await getMessagesSafe(locale);
   if (!messages) notFound();
-
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
       {children}

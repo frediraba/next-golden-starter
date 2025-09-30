@@ -1,8 +1,8 @@
-// ESLint 9 flat-config
+﻿// ESLint 9 flat-config
 import js from "@eslint/js";
 import next from "eslint-config-next";
 
-// ✅ Paneme configu muutujasse, siis teeme default export'i.
+// âœ… Paneme configu muutujasse, siis teeme default export'i.
 // See vaigistab "import/no-anonymous-default-export" hoiatuse.
 const config = [
   js.configs.recommended,
@@ -21,3 +21,5 @@ const config = [
 ];
 
 export default config;
+
+
