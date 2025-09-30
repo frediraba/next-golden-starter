@@ -1,9 +1,32 @@
 {
+  // Ühtne vormindus
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.eol": "\n",
+
+  // ESLint 9 (flat) – käivita käsuga, mitte automaatselt iga salvestuse peal (kiire -> explicit)
   "eslint.useFlatConfig": true,
-  "eslint.format.enable": true,
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  }
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // TypeScript – kasuta repo TS-i
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // Tailwind – parem klasside tugi
+  "tailwindCSS.experimental.classRegex": ["clsx\\(([^)]*)\\)", "cn\\(([^)]*)\\)"],
+
+  // i18n Ally – loe tõlked /messages kaustast
+  "i18n-ally.localesPaths": ["messages"],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.displayLanguage": "en",
+  "i18n-ally.enabledFrameworks": ["json"],
+
+  // Vitest/Playwright – explorer’id
+  "playwright.env": {},
+  "playwright.reuseBrowser": true,
+
+  // Prettier eelistus (kui Prettier on kasutusel)
+  "prettier.useTabs": false
 }

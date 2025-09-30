@@ -12,7 +12,8 @@
     "precommit:quick": "prettier -w . && eslint . --fix",
     "test:unit": "vitest run --coverage",
     "test:e2e": "playwright test --reporter=line",
-    "test:ci": "npm run lint && npm run build && npm run test:unit && npm run test:e2e"
+    "test:ci": "npm run lint && npm run build && npm run test:unit && npm run test:e2e",
+    "test:all": "npm run lint && npm run typecheck && npm run test:coverage && npx playwright install && npm run test:e2e && npm run build && node scripts/test-prod.js"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
