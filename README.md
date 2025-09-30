@@ -2,115 +2,176 @@
 
 ![CI](https://github.com/frediraba/next-golden-starter/actions/workflows/ci.yml/badge.svg)
 
-Universaalne Next.js starter õppimiseks ja päris projektideks. Fookus on **modernil stackil** ja **puhtal arenduskogemusel**:
+**Universaalne Next.js starter** õppimiseks ja päris projektideks. Fookus on **modernil stackil**, **turvalisel vaikekonfigil** ja **mõnusal DX-il** – ilma, et projekt mõttetult paisuks.
 
-- Next.js 15 + React 19 + Turbopack (dev)
-- Tailwind CSS 4 (konfigita)
-- TypeScript, ESLint 9 (flat) + Prettier
-- Auth.js v5 (GitHub OAuth, JWT sessioon) — **DB pole nõutud**
-- Vitest + Testing Library (unit/komponent), Playwright (e2e)
-- GitHub Actions (lint → build/typecheck → unit → e2e)
+- Next.js 15 + React 19 (Turbopack dev)
+- Tailwind CSS 4 (konfigita; `@import "tailwindcss";`)
+- TypeScript, ESLint 9 (flat), Prettier
+- i18n – `next-intl` (URL-locale `/en`, `/et`, automaatne redirect)
+- Auth.js v5 (GitHub OAuth, JWT sessioon) – _DB pole nõutud_
+- Prisma + SQLite (devis failipõhine DB)
+- Testid: Vitest (+RTL, JSDOM, coverage) & Playwright (e2e)
+- CI: GitHub Actions (lint → build/typecheck → unit+coverage → e2e)
+- Turve: CSP (dev/prod eraldi), HSTS, jpm. **CSP presetid ENV-iga** (GA, Sentry, PostHog, Stripe, Google Fonts/Maps, Mapbox)
+- DX: husky + lint-staged, VSCode seadistused, `.editorconfig`, `.npmrc`
 
 ---
 
-## Quick Start
+## 🧰 Eeldused
+
+- **Node 22 LTS**
+- **npm** (soovi korral pnpm/bun – kohanda käske)
+
+Kontroll:
 
 ```bash
-# Node 22 LTS soovitatav
 node -v
-
-# Install
+# v22.x
+🚀 Kiirkäivitus
+bash
+Copy code
+# 1) sõltuvused
 npm ci
 
-# Keskkonnamuutujad (vali üks):
-# macOS/Linux
-cp env.example .env
-# Windows PowerShell
-copy env.example .env
+# 2) keskkonnamuutujad
+copy env.example .env       # Windows PowerShell
+# või
+cp env.example .env         # macOS/Linux
 
-# AUTH_SECRET → pane tugev väärtus (nt PowerShell):
-# [Convert]::ToBase64String((1..32 | % {Get-Random -Max 256}))
+# 3) Andmebaas (Prisma)
+npx prisma generate
+npx prisma migrate dev --name init
 
-# Dev
+# 4) Dev
 npm run dev   # http://localhost:3000
-Ava http://localhost:3000 ja alusta arendust failist app/page.tsx.
+Ava:
 
-Sisselogimine (GitHub OAuth, valikuline)
-.env
+http://localhost:3000/en ja http://localhost:3000/et
+
+http://localhost:3000/en/db-demo – Prisma demo (loo kasutajaid)
+
+http://localhost:3000/api/health – health-check (NB: API teed ei ole locale all)
+
+🔐 Autentimine (valikuline)
+Auth.js v5 GitHub OAuth (JWT sessioon). DB pole kohustuslik.
+
+.env (näide):
 
 env
 Copy code
-AUTH_SECRET=...                     # tugev juhuslik string (Base64 OK)
-GITHUB_ID=__your_github_client_id__ # GitHub OAuth App
+AUTH_SECRET= # tugev juhuslik string (nt Base64)
+GITHUB_ID=__your_github_client_id__
 GITHUB_SECRET=__your_github_secret__
-GitHub OAuth App seadistus
+GitHub OAuth App:
 
 Homepage: http://localhost:3000
 
 Authorization callback: http://localhost:3000/api/auth/callback/github
 
-Testi
+Testi:
 
-http://localhost:3000/api/auth/signin – GitHub login
+/api/auth/signin – GitHub login
 
-http://localhost:3000/(protected)/dashboard – suunab loginile, kui sessiooni pole
+vajadusel suuna kaitstud lehtedel sisselogimisele, kui sessiooni pole
 
-Skriptid
-bash
-Copy code
-npm run dev       # dev-server (Turbopack)
-npm run build     # build + typecheck
-npm run lint      # ESLint (flat-config)
-npx vitest run    # unit/komponent testid
-npx playwright test  # e2e (vajab, et dev jookseb paralleelselt)
-Kaustastruktuur (lühi)
-bash
-Copy code
-app/
-  (protected)/
-    layout.tsx          # serveripoolne auth guard (redirect signinile)
-    dashboard/page.tsx  # näidis kaitstud leht
-  api/auth/[...nextauth]/route.ts   # Auth.js v5 route handler
-  ui-demo/page.tsx      # shadcn/ui demo (kui lisatud)
-components/ui/*         # shadcn/ui komponendid (kui lisatud)
-lib/
-  auth.ts               # NextAuth konfiguratsioon
-  utils.ts              # pisifunktsioonid
-tests/                  # Vitest + RTL testid
-e2e/                    # Playwright e2e testid
-.github/workflows/ci.yml# CI (lint → build → unit → e2e)
-Kasulikud märkmed
-Tailwind 4: piisab @import "tailwindcss"; reast app/globals.css failis. Eraldi tailwind.config.js pole vaja.
+🌐 i18n (next-intl)
+Locale middleware lisab puuduvasse URL-i /<defaultLocale> (vaikimisi en).
 
-ESLint 9 (flat): konfiguratsioon failis .eslint.config.mjs.
+Tõlked elavad messages/en.json ja messages/et.json.
 
-Typescript path alias: @/* (Vite/Vitest jaoks kasutame vite-tsconfig-paths pluginit).
+Komponentides kasuta useTranslations("Namespace").
 
-Use this repository as a template
-Klikka Use this template GitHubis.
+🗃️ Andmebaas (Prisma + SQLite)
+Dev: prisma/dev.db (failipõhine SQLite).
 
-Clone uue repo.
+Prod: vaheta schema.prisma datasource Postgres/MySQL vastu ja sea DATABASE_URL.
 
-Käivita:
+Käsklused:
 
 bash
 Copy code
-npm ci
-cp env.example .env   # või Windowsis: copy env.example .env
-npm run dev
-Litsents / panustamine
-Kui teed avalikuks: lisa siia litsents (MIT vms) ja panustamise juhised.
+npx prisma generate
+npx prisma migrate dev --name <nimi>
+npx prisma studio
+🧪 Testimine
+Unit/komponent (Vitest + RTL):
 
-PR-id ja issue’d teretulnud. CI peab minema roheliseks (lint, build, unit, e2e).
-
-yaml
+bash
 Copy code
+npm run test:unit
+npm run test:coverage   # text + lcov (coverage/)
+E2E (Playwright):
 
----
+bash
+Copy code
+npx playwright install  # esmakordsel
+npm run test:e2e
+# või
+npm run test:e2e:headed
+Vitest välistab .next/ ja e2e testid; coverage kogutakse ainult jooksutatud failidelt.
 
-Kui see on sees, tee kiire commit ja push:
+🛡️ Turve (CSP, HSTS jms)
+Dev: CSP lubab HMR/RSC jaoks 'unsafe-inline' 'unsafe-eval' blob: ja ws:/localhost connect-src.
 
-```powershell
-git add README.md
-git commit -m "docs: replace default CRA README with Golden v1 quick start"
-git push
+Prod: range baas ('self'). Kolmandate teenuste domeenid lülitad ENV-iga (vt csp.config.ts).
+
+Näide – lubame GA ja Google Fonts:
+
+env
+Copy code
+CSP_ENABLE_GA=true
+CSP_ENABLE_GOOGLE_FONTS=true
+Middleware koondab domeenid automaatselt presetitest.
+NB: /api/* EI lokaliseerita (health, webhooks jms).
+
+🩺 Health-check & vealehed
+GET /api/health → 200 OK JSON (aeg, env, git meta võimalusel)
+
+404: app/[locale]/not-found.tsx
+
+Error boundary: app/[locale]/error.tsx (reset() nupuga)
+
+🧭 VS Code & AI-assar
+.vscode/ – extensions, settings (ESLint flat, Prettier, Tailwind, i18n Ally), launch/tasks
+
+docs/OVERVIEW.md – repo kaart
+
+docs/AI_GUIDE.md – reeglid AI-le (TypeScript, alias @/*, i18n, server actions, CSP presetid)
+
+Avad VS Code’is → installi soovitatud laiendused → F5 (“Next.js dev”).
+
+🛠️ Kasulikud skriptid
+jsonc
+Copy code
+"scripts": {
+  "dev": "next dev --turbopack",
+  "build": "next build",
+  "start": "next start",
+  "lint": "eslint .",
+  "test:unit": "vitest run",
+  "test:coverage": "vitest run --coverage",
+  "test:e2e": "playwright test",
+  "test:e2e:headed": "playwright test --headed",
+  "ci": "npm run lint && npm run build && npm run test:unit && npm run test:e2e"
+}
+🧹 Koodistiil & DX
+ESLint 9 (flat) + Prettier
+
+husky + lint-staged – pre-commit: prettier, eslint, kiire typecheck
+
+LF reavahetused
+Windowsi hoiatusi vältimiseks:
+
+bash
+Copy code
+git config --global core.autocrlf false
+git config --global core.eol lf
+git add --renormalize .
+git commit -m "chore: normalize line endings to LF"
+🐛 Tõrkeabi
+Dev CSP vead (inline script refused) – kontrolli, et middleware.ts kasutab dev-režiimis inline/eval/WS lõdvendust.
+
+Vitest alias @/… ei toimi – vaata tsconfig.json (baseUrl, paths) + vitest.config.ts alias fallback.
+
+Husky “command not found” – .husky/pre-commit peab olema LF ja käivitatav (UNIX: chmod +x).
+```
