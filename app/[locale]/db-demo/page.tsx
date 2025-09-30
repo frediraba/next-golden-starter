@@ -1,32 +1,24 @@
 'use client';
 
 import { useEffect, useRef, useState, useTransition } from 'react';
-import { listUsers, createUser } from './actions';
+import { listUsers, createUser, type ApiUser } from './actions';
 
-// NB: Server actions (listUsers/createUser) tehakse "POST"-ina – see on Nexti normaalne käitumine.
-// Me EI tohi neid renderi ajal kutsuda; tee seda effect'is või kasutaja sündmusest.
-
-type UiUser = {
-  id: string;
-  email: string;
-  name: string | null;
-  createdAt: string;
-};
+type UiUser = ApiUser; // sama struktuur; allpool vormindame createdAt kuvamiseks
 
 export default function DbDemoPage() {
   const [users, setUsers] = useState<UiUser[]>([]);
   const [isPending, startTransition] = useTransition();
-
-  // Guard, et dev StrictMode topelt-mount ei teeks kahekordset refresh'i
   const didInit = useRef(false);
 
   async function refresh() {
-    const rows = await listUsers();
+    const rows = await listUsers(); // ApiUser[]
     setUsers(
-      rows.map((u: UiUser) => ({
-        ...u,
-        createdAt: new Date(u.createdAt as unknown as string).toLocaleString(),
-      })),
+      rows.map(
+        (u: ApiUser): UiUser => ({
+          ...u,
+          createdAt: new Date(u.createdAt).toLocaleString(),
+        }),
+      ),
     );
   }
 

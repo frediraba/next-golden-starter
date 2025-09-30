@@ -2,21 +2,24 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import HomeView from '@/components/HomeView';
 
 export default function LocalizedHomePage() {
   const t = useTranslations('Home');
   return (
-    <main className="p-6 space-y-3">
-      <h1 className="text-3xl font-bold">{t('title')}</h1>
-      <p className="text-gray-600">{t('cta')}</p>
-      <div className="space-x-3">
+    <>
+      <HomeView title={t('title')} cta={t('cta')} />
+      <div className="px-6 space-x-3">
         <Link className="underline" href="/en">
           EN
         </Link>
         <Link className="underline" href="/et">
           ET
         </Link>
+        <Link className="underline" href="./db-demo">
+          DB demo
+        </Link>
       </div>
-    </main>
+    </>
   );
 }

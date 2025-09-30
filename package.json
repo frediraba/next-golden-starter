@@ -9,7 +9,10 @@
     "lint": "eslint",
     "prepare": "husky",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "precommit:quick": "prettier -w . && eslint . --fix"
+    "precommit:quick": "prettier -w . && eslint . --fix",
+    "test:unit": "vitest run --coverage",
+    "test:e2e": "playwright test --reporter=line",
+    "test:ci": "npm run lint && npm run build && npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
@@ -35,6 +38,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "3.2.4",
     "eslint": "^9.36.0",
     "eslint-config-next": "^15.5.4",
     "husky": "9.1.7",

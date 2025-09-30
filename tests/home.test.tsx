@@ -1,11 +1,10 @@
-import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import Home from "@/app/page";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import HomeView from '@/components/HomeView';
 
-// Suitsutest: kontrolli, et avalehe komponent renderdub ja mingi tekst on nähtav
-it("renders home content", () => {
-  render(<Home />);
-  // Nexti vaikimisi lehel on tavaliselt "Learn" või "Next" – vabalt võib muutuda,
-  // seega võtame paindliku regexi.
-  expect(screen.getByText(/next|welcome|learn/i)).toBeInTheDocument();
+it('renders title and cta', () => {
+  render(<HomeView title="Welcome" cta="Start here" />);
+  expect(screen.getByRole('heading', { name: /welcome/i })).toBeInTheDocument();
+  expect(screen.getByText(/start here/i)).toBeInTheDocument();
 });
